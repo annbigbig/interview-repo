@@ -10,7 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="TB_TWEET")
@@ -43,12 +46,13 @@ public class Tweet implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	@Column(name="createdTime")
+	@Column(name="createdTime",columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	public Date getCreatedTime() {
 		return createdTime;
 	}
 	public void setCreatedTime(Date createdTime) {
 		this.createdTime = createdTime;
 	}	
-	
+
+   
 }

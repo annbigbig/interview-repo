@@ -57,6 +57,12 @@ public abstract class AbstractHibernateDao<T extends Serializable> implements IO
         Preconditions.checkState(entity != null);
         delete(entity);
     }
+ 
+    @Override
+    public final boolean isExisted(final T entity) {
+        //added by annbigbig
+        return getCurrentSession().contains(entity);
+    }
 
     protected final Session getCurrentSession() {
         return sessionFactory.getCurrentSession();

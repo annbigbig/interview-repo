@@ -7,7 +7,9 @@ import com.kashu.demo.dao.common.IOperations;
 import com.kashu.demo.domain.Tweet;
 import com.kashu.demo.service.ITweetService;
 import com.kashu.demo.service.common.AbstractService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TweetService extends AbstractService<Tweet> implements ITweetService {
     @Autowired
     private ITweetDao dao;

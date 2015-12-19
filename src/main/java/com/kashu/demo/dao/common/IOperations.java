@@ -17,4 +17,6 @@ public interface IOperations<T extends Serializable> {
 
     void deleteById(final long entityId);
 
+    boolean isExisted(final T entity);
+
 }

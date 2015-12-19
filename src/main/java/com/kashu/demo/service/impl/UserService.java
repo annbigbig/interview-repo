@@ -7,7 +7,9 @@ import com.kashu.demo.dao.common.IOperations;
 import com.kashu.demo.domain.User;
 import com.kashu.demo.service.IUserService;
 import com.kashu.demo.service.common.AbstractService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserService extends AbstractService<User> implements IUserService {
     @Autowired
     private IUserDao dao;

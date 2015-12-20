@@ -13,13 +13,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="TB_USER")
 public class User implements Serializable {
 	private Long id;
 	private String username;
 	private String password;
-	private Set<Tweet> tweets;
+	//private Set<Tweet> tweets;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -43,6 +45,8 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	/*
+	@JsonIgnore
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="user",fetch = FetchType.EAGER)
 	public Set<Tweet> getTweets() {
 		return tweets;
@@ -50,5 +54,5 @@ public class User implements Serializable {
 	public void setTweets(Set<Tweet> tweets) {
 		this.tweets = tweets;
 	}
-	
+	*/
 }

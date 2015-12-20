@@ -10,17 +10,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="TB_TWEET")
 public class Tweet implements Serializable {
 
 	private Long id;					//primary key
-	private User user;			//foreign key 
+	//private User user;			
+	private Long user_id;		//foreign key
 	private String message;
 	private Date createdTime;
 	
@@ -32,12 +31,22 @@ public class Tweet implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	/*
 	@ManyToOne(cascade=CascadeType.ALL)
 	public User getUser() {
 		return user;
 	}
+	
 	public void setUser(User user) {
 		this.user = user;
+	}
+	*/
+	@Column(name="user_id")
+	public Long getUser_id() {
+		return user_id;
+	}
+	public void setUser_id(Long user_id) {
+		this.user_id = user_id;
 	}
 	@Column(name="message")
 	public String getMessage() {
@@ -52,7 +61,6 @@ public class Tweet implements Serializable {
 	}
 	public void setCreatedTime(Date createdTime) {
 		this.createdTime = createdTime;
-	}	
-
-   
+	}
+	
 }

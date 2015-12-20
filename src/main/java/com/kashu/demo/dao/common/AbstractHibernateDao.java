@@ -52,16 +52,15 @@ public abstract class AbstractHibernateDao<T extends Serializable> implements IO
     }
 
     @Override
-    public final void deleteById(final long entityId) {
-        final T entity = findOne(entityId);
+    public final void deleteById(final long id) {
+        final T entity = findOne(id);
         Preconditions.checkState(entity != null);
         delete(entity);
     }
  
     @Override
-    public final boolean isExisted(final T entity) {
-        //added by annbigbig
-        return getCurrentSession().contains(entity);
+    public final boolean isExisted(final long id) {
+        return (findOne(id)==null) ? false : true;
     }
 
     protected final Session getCurrentSession() {

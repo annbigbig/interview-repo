@@ -28,8 +28,8 @@ public class RestUserController {
 		public ResponseEntity<Void> createUser(@RequestBody User user, 	UriComponentsBuilder ucBuilder) {
 			System.out.println("Creating User " + user.getUsername());
 
-			if (userService.isExisted(user)) {
-				System.out.println("A User with name " + user.getUsername() + " already exist");
+			if (userService.isExisted(user.getId())) {
+				System.out.println("A User with id " + user.getId() + " called '" + user.getUsername() + "' already exist");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
 

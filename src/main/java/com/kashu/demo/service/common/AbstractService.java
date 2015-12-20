@@ -40,8 +40,8 @@ public abstract class AbstractService<T extends Serializable> implements IOperat
     }
     
     @Override
-    public boolean isExisted(final T entity) {
-        return getDao().isExisted(entity);
+    public boolean isExisted(final long id) {
+        return getDao().isExisted(id);
     }
 
     protected abstract IOperations<T> getDao();

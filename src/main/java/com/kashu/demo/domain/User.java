@@ -10,8 +10,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -24,7 +26,7 @@ public class User implements Serializable {
 	private Long id;
 	private String username;
 	private String password;
-	//private Set<Tweet> tweets;
+	private Set<Tweet> tweets;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -34,7 +36,7 @@ public class User implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	@Column(name="username")
+	@Column(name="username",unique=true)
 	public String getUsername() {
 		return username;
 	}
@@ -48,15 +50,15 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	/*
 	@JsonIgnore
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="user",fetch = FetchType.EAGER)
+	@OneToMany(cascade=CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@JoinColumn(name="user_id")
 	public Set<Tweet> getTweets() {
 		return tweets;
 	}
 	public void setTweets(Set<Tweet> tweets) {
 		this.tweets = tweets;
 	}
-	*/
+	
 	
 }

@@ -1,5 +1,7 @@
 package com.kashu.demo.controller;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,11 +17,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.kashu.demo.domain.Tweet;
 import com.kashu.demo.domain.User;
 import com.kashu.demo.service.ITweetService;
+import com.kashu.demo.service.IUserService;
+
 
 @RestController
 public class RestTweetController {
 	@Autowired
 	ITweetService tweetService;
+	
+	@Autowired
+	IUserService userService;
 	
 	//-------------------Create a Tweet--------------------------------------------------------
 	@RequestMapping(value = "/tweet/add/", method = RequestMethod.POST)
@@ -34,8 +41,9 @@ public class RestTweetController {
 		/*
 		   you can not update an existing tweet article
 		 */
-		if (tweetService.isExisted(tweet.getId())) {
-			System.out.println("A Tweet with id " + tweet.getId() + " already exist");
+		Long id = tweet.getId();
+		if (id!=null && tweetService.isExisted(id)) {
+			System.out.println("A Tweet with id " + id + " already exist");
 			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 		}
 
@@ -60,7 +68,20 @@ public class RestTweetController {
 		}
 	
 		//-------------------Retrieve all of the Tweets owned by someone--------------------------------------------------------
+		@RequestMapping(value = "/tweets_owned_by/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+		public ResponseEntity<Set<Tweet>> getTweets(@PathVariable("userId") long userId) {
+			System.out.println("Fetching Tweets owned by user with id " + userId);
+			User user = userService.findOne(userId);
+			Set<Tweet> tweets;
+			if (user != null) {
+				tweets = user.getTweets();
+				if(tweets != null){
+					return new ResponseEntity<Set<Tweet>>(tweets, HttpStatus.OK);
+				}
+			}
+			
+			System.out.println("Not any tweet was found");
+			return new ResponseEntity<Set<Tweet>>(HttpStatus.NOT_FOUND);
+		}
 		
-		
-
 }

@@ -28,10 +28,12 @@ public class RestUserController {
 		public ResponseEntity<Void> createUser(@RequestBody User user, 	UriComponentsBuilder ucBuilder) {
 			System.out.println("Creating User " + user.getUsername());
 
+			/*
 			if (userService.isExisted(user.getId())) {
 				System.out.println("A User with id " + user.getId() + " called '" + user.getUsername() + "' already exist");
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
+			*/
 
 			userService.create(user);
 
@@ -51,6 +53,23 @@ public class RestUserController {
 				return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 			}
 			return new ResponseEntity<User>(user, HttpStatus.OK);
+		}
+		
+		//------------------- Update a User (all you can do is changing password ) --------------------------------------------------------
+		
+		@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
+		public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+			System.out.println("Updating User " + id);
+			
+			User currentUser = userService.findOne(id);
+			
+			if (currentUser==null) {
+				System.out.println("User with id " + id + " not found");
+				return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+			}
+			currentUser.setPassword(user.getPassword());
+			userService.update(currentUser);
+			return new ResponseEntity<User>(currentUser, HttpStatus.OK);
 		}
 		
 }

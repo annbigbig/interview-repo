@@ -51,7 +51,7 @@ public class User implements Serializable {
 		this.password = password;
 	}
 	@JsonIgnore
-	@OneToMany(cascade=CascadeType.PERSIST,fetch = FetchType.EAGER)
+	@OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE},fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	public Set<Tweet> getTweets() {
 		return tweets;

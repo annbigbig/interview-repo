@@ -29,7 +29,7 @@ public class RestTweetController {
 	IUserService userService;
 	
 	//-------------------Create a Tweet--------------------------------------------------------
-	@RequestMapping(value = "/tweet/add/", method = RequestMethod.POST)
+	@RequestMapping(value = "/tweet/", method = RequestMethod.POST)
 	public ResponseEntity<Void> createTweet(@RequestBody Tweet tweet, 	UriComponentsBuilder ucBuilder) {
 		System.out.println("Creating Tweet " + tweet.getMessage());
 

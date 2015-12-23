@@ -10,16 +10,17 @@
         http://www.springframework.org/schema/security/spring-security.xsd">
 	
 	<!-- Stateless RESTful services use BASIC authentication -->
-    <security:http auto-config="true" create-session="stateless" pattern="/user/**">
-        <security:intercept-url pattern="/**" access="ROLE_ADMIN"/>
+    <security:http use-expressions="true" auto-config="true" create-session="stateless" pattern="/**">
+        <security:intercept-url pattern="/user/**" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/tweet/**" access="hasRole('ROLE_USER')"/>
         <security:http-basic/>
     </security:http>
  
     <security:authentication-manager>
         <security:authentication-provider>
-            <security:user-service>
-                <security:user name="root" password="abc123" authorities="ROLE_ADMIN"/>
-            </security:user-service>
+            <security:jdbc-user-service data-source-ref="restDataSource"
+            users-by-username-query="select username,password,enabled from TB_USER where username=?"
+            authorities-by-username-query="SELECT u.username,r.role FROM TB_USER as u LEFT OUTER JOIN TB_ROLE as r ON u.id = r.user_id where u.username=?"/>
         </security:authentication-provider>
     </security:authentication-manager>
 

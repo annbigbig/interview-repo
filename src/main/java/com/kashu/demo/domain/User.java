@@ -26,6 +26,7 @@ public class User implements Serializable {
 	private Long id;
 	private String username;
 	private String password;
+	private boolean enabled;
 	private Set<Tweet> tweets;
 	private Set<Role> roles;
 	
@@ -50,6 +51,13 @@ public class User implements Serializable {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	@Column(name="enabled",columnDefinition = "tinyint default true")
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 	@JsonIgnore
 	@OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE},fetch = FetchType.EAGER)

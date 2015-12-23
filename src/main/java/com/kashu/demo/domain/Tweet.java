@@ -45,7 +45,7 @@ public class Tweet implements Serializable {
 		this.user = user;
 	}
 	*/
-	@Column(name="user_id")
+	@Column(name="user_id",nullable=false)
 	public Long getUser_id() {
 		return user_id;
 	}

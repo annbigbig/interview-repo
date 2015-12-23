@@ -27,6 +27,7 @@ public class User implements Serializable {
 	private String username;
 	private String password;
 	private Set<Tweet> tweets;
+	private Set<Role> roles;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -59,6 +60,12 @@ public class User implements Serializable {
 	public void setTweets(Set<Tweet> tweets) {
 		this.tweets = tweets;
 	}
-	
-	
+	@JsonIgnore
+	@OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy="user")
+	public Set<Role> getRoles() {
+		return roles;
+	}
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 }

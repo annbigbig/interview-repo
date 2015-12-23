@@ -1,5 +1,8 @@
 package com.kashu.demo.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.kashu.demo.service.IUserService;
 import com.kashu.demo.service.impl.UserService;
 import com.kashu.demo.domain.User;
+import com.kashu.demo.domain.Role;
 
 @RestController
 public class RestUserController {
@@ -34,7 +38,13 @@ public class RestUserController {
 				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
 			}
 			*/
-
+			Set<Role> roles = new HashSet<Role>();
+			Role role = new Role();
+			role.setRole("ROLE_USER");
+			roles.add(role);
+			user.setRoles(roles);
+			role.setUser(user);
+			
 			userService.create(user);
 
 			HttpHeaders headers = new HttpHeaders();

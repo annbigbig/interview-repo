@@ -1,5 +1,6 @@
 package com.kashu.demo.controller;
 
+import java.security.Principal;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,23 +34,14 @@ public class RestTweetController {
 	
 	//-------------------Create a Tweet--------------------------------------------------------
 	@RequestMapping(value = "/tweet/", method = RequestMethod.POST)
-	public ResponseEntity<Void> createTweet(@RequestBody Tweet tweet, 	UriComponentsBuilder ucBuilder) {
-		System.out.println("Creating Tweet " + tweet.getMessage());
+	public ResponseEntity<Void> createTweet(@RequestBody Tweet tweet, UriComponentsBuilder ucBuilder, Principal principal) {
+		System.out.println("message " + tweet.getMessage());
 
-		/*
-		 * you must check the man owned the credential and the man created this tweet were the same guy.
-		   (not implemetent yet because i have not work with the basic authentication part)
-		*/
+		User currentUser = userService.findByUsername(principal.getName());
+		System.out.println("id = " + currentUser.getId());
+		System.out.println("username = " + currentUser.getUsername());
 		
-		/*
-		   you can not update an existing tweet article
-		 */
-		Long id = tweet.getId();
-		if (id!=null && tweetService.isExisted(id)) {
-			System.out.println("A Tweet with id " + id + " already exist");
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-		}
-
+		tweet.setUser_id(currentUser.getId());  //who leaves this tweet ?
 		tweetService.create(tweet);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -57,18 +52,24 @@ public class RestTweetController {
 	//-------------------Retrieve a Tweet--------------------------------------------------------
 	
 		@RequestMapping(value = "/tweet/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<Tweet> getTweet(@PathVariable("id") long id) {
+		public ResponseEntity<Tweet> getTweet(@PathVariable("id") long id, Principal principal) {
 			System.out.println("Fetching Tweet with id " + id);
 			Tweet tweet = tweetService.findOne(id);
 			if (tweet == null) {
 				System.out.println("Tweet with id " + id + " not found");
 				return new ResponseEntity<Tweet>(HttpStatus.NOT_FOUND);
 			}
+			User currentUser = userService.findByUsername(principal.getName());
+			if(tweet.getUser_id().longValue()!=currentUser.getId().longValue()){
+				System.out.println("you are not the owner of tweet id : " + tweet.getId());
+				return new ResponseEntity<Tweet>(HttpStatus.FORBIDDEN);
+			}
+			
 			return new ResponseEntity<Tweet>(tweet, HttpStatus.OK);
 		}
 	
 		//-------------------Retrieve all of the Tweets owned by someone--------------------------------------------------------
-		@RequestMapping(value = "/tweets_owned_by/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+		@RequestMapping(value = "/tweet/all/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<Set<Tweet>> getTweets(@PathVariable("userId") long userId) {
 			System.out.println("Fetching Tweets owned by user with id " + userId);
 			User user = userService.findOne(userId);

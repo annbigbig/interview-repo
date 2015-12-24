@@ -43,6 +43,7 @@ public class RestUserController {
 			role.setRole("ROLE_USER");
 			roles.add(role);
 			user.setRoles(roles);
+			user.setEnabled(true);
 			role.setUser(user);
 			
 			userService.create(user);

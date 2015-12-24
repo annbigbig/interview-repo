@@ -4,5 +4,5 @@ import com.kashu.demo.domain.User;
 import com.kashu.demo.dao.common.IOperations;
 
 public interface IUserDao extends IOperations<User>{
-
+    User findByUsername(final String username);
 }

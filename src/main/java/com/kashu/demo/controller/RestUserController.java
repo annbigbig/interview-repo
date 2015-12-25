@@ -1,5 +1,6 @@
 package com.kashu.demo.controller;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,7 +55,6 @@ public class RestUserController {
 		}
 
 		//-------------------Retrieve Single User--------------------------------------------------------
-		
 		@RequestMapping(value = "/user/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<User> getUser(@PathVariable("id") long id) {
 			System.out.println("Fetching User with id " + id);
@@ -67,20 +67,16 @@ public class RestUserController {
 		}
 		
 		//------------------- Update a User (all you can do is changing password ) --------------------------------------------------------
-		
 		@RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
 		public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
-			System.out.println("Updating User " + id);
-			
-			User currentUser = userService.findOne(id);
-			
-			if (currentUser==null) {
+			User userInDb = userService.findOne(id);
+			if (userInDb==null) {
 				System.out.println("User with id " + id + " not found");
 				return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 			}
-			currentUser.setPassword(user.getPassword());
-			userService.update(currentUser);
-			return new ResponseEntity<User>(currentUser, HttpStatus.OK);
+			userInDb.setPassword(user.getPassword());
+			userService.update(userInDb);
+			return new ResponseEntity<User>(userInDb, HttpStatus.OK);
 		}
 		
 }

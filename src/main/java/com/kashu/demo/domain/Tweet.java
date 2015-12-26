@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -22,8 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Tweet implements Serializable {
 
 	private Long id;					//primary key
-	//private User user;			
-	private Long user_id;		//foreign key
+	private User user;			//foreign key
 	private String message;
 	private Date createdTime;
 	
@@ -35,23 +35,14 @@ public class Tweet implements Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	/*
-	@ManyToOne(cascade=CascadeType.ALL)
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name="user_id")
 	public User getUser() {
 		return user;
 	}
-	
 	public void setUser(User user) {
 		this.user = user;
-	}
-	*/
-	//@Column(name="user_id",nullable=false)
-	@Column(name="user_id")
-	public Long getUser_id() {
-		return user_id;
-	}
-	public void setUser_id(Long user_id) {
-		this.user_id = user_id;
 	}
 	@Column(name="message")
 	public String getMessage() {

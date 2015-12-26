@@ -60,8 +60,7 @@ public class User implements Serializable {
 		this.enabled = enabled;
 	}
 	@JsonIgnore
-	@OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE},fetch = FetchType.EAGER)
-	@JoinColumn(name="user_id")
+	@OneToMany(cascade={CascadeType.PERSIST,CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy="user")
 	public Set<Tweet> getTweets() {
 		return tweets;
 	}

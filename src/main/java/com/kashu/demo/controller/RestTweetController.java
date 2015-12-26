@@ -8,13 +8,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +40,7 @@ public class RestTweetController {
 		  System.out.println("message " + tweet.getMessage());
 		  System.out.println("username = " + logonUser.getUsername());		
 		  System.out.println("user.id = " + currentUser.getId());
-   tweet.setUser_id(currentUser.getId());
+		  tweet.setUser(currentUser);
 		tweetService.create(tweet);
 
 		HttpHeaders headers = new HttpHeaders();
@@ -60,7 +57,7 @@ public class RestTweetController {
 			return new ResponseEntity<Tweet>(HttpStatus.NOT_FOUND);
 		}
 		User currentUser = userService.findByUsername(principal.getName());
-		if(currentUser.getId().longValue()!=tweet.getUser_id()){
+		if(currentUser.getId().longValue()!=tweet.getUser().getId().longValue()){
 			System.out.println("the user '" + currentUser.getUsername() + "' with id " + currentUser.getId() + " not the owner of tweet with id " + tweet.getId());
 			return new ResponseEntity<Tweet>(HttpStatus.UNAUTHORIZED);
 		}
@@ -77,7 +74,7 @@ public class RestTweetController {
 			return new ResponseEntity<Tweet>(HttpStatus.NOT_FOUND);
 		}
 		User currentUser = userService.findByUsername(logonUser.getUsername());
-		if(currentUser.getId().longValue()!=tweetInDb.getUser_id().longValue()){
+		if(currentUser.getId().longValue()!=tweet.getUser().getId().longValue()){
 			System.out.println("the user '" + currentUser.getUsername() + "' with id " + currentUser.getId() + " not the owner of tweet with id " + tweetInDb.getId());
 			return new ResponseEntity<Tweet>(HttpStatus.UNAUTHORIZED);
 		}
@@ -96,7 +93,7 @@ public class RestTweetController {
 				System.out.println("Tweet with id " + id + " not found");
 				return new ResponseEntity<Tweet>(HttpStatus.NOT_FOUND);
 			}
-			if(tweet.getUser_id().longValue()!=currentUser.getId().longValue()){
+			if(currentUser.getId().longValue()!=tweet.getUser().getId().longValue()){
 				System.out.println("you are not the owner of tweet id : " + tweet.getId());
 				return new ResponseEntity<Tweet>(HttpStatus.FORBIDDEN);
 			}

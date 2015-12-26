@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.kashu.demo.service.IUserService;
 import com.kashu.demo.service.impl.UserService;
+import com.kashu.demo.domain.Tweet;
 import com.kashu.demo.domain.User;
 import com.kashu.demo.domain.Role;
 
@@ -32,13 +33,6 @@ public class RestUserController {
 		@RequestMapping(value = "/user/", method = RequestMethod.POST)
 		public ResponseEntity<Void> createUser(@RequestBody User user, 	UriComponentsBuilder ucBuilder) {
 			System.out.println("Creating User " + user.getUsername());
-
-			/*
-			if (userService.isExisted(user.getId())) {
-				System.out.println("A User with id " + user.getId() + " called '" + user.getUsername() + "' already exist");
-				return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			}
-			*/
 			Set<Role> roles = new HashSet<Role>();
 			Role role = new Role();
 			role.setRole("ROLE_USER");
@@ -77,6 +71,18 @@ public class RestUserController {
 			userInDb.setPassword(user.getPassword());
 			userService.update(userInDb);
 			return new ResponseEntity<User>(userInDb, HttpStatus.OK);
+		}
+		
+		//-------------------Delete a User--------------------------------------------------------
+		@RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
+		public ResponseEntity<User> deleteUser(@PathVariable("id") long id){		
+			User user = userService.findOne(id);
+			if(user == null){
+				System.out.println("tweet with id " + id + " not found");
+				return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+			}
+			userService.delete(user);
+			return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
 		}
 		
 }
